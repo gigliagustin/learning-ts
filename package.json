@@ -1,0 +1,14 @@
+{
+  "name": "understanding-ts",
+  "version": "1.0.0",
+  "main": "app.js",
+  "repository": "https://github.com/gigliagustin/learning-ts.git",
+  "scripts": {
+    "start": "lite-server"
+  },
+  "author": "agigli <agigli@iuvity.net>",
+  "license": "MIT",
+  "devDependencies": {
+    "lite-server": "^2.6.1"
+  }
+}
