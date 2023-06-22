@@ -24,14 +24,33 @@ class Department {
   }
 }
 
-const accounting = new Department('d1', 'Accounting')
+class ITDepartment extends Department {
+  constructor(id: string, public admins: string[]) {
+    super(id, 'IT');
+    
+  }
+}
 
-accounting.addEmployee('Ani')
-accounting.addEmployee('Agucho')
-accounting.describe()
+class AccountingDepartment extends Department {
+  constructor(id: string, private reports: string[]) {
+    super(id, 'Accounting')
+  }
 
+  addReports(text: string) {
+    this.reports.push(text)
+  }
 
-accounting.printEmployeeInformation()
+  printReports() {
+    console.log(this.reports )
+  }
+}
+
+const accounting = new AccountingDepartment('d2', [ ])
+const it = new ITDepartment('d1', ["Agucho", "Hernan", "Maciel"])
+
+accounting.addReports('Something went wrong')
+accounting.printReports()
+
 
 /* const accountingCopy = {name: 'DUMMY', describe: accounting.describe }
 
