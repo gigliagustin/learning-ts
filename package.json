@@ -6,7 +6,7 @@
   "scripts": {
     "start": "lite-server"
   },
-  "author": "agigli <agigli@iuvity.net>",
+  "author": "Agustin Gigli <giglimagustin@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "lite-server": "^2.6.1"

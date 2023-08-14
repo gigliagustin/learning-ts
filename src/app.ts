@@ -1,4 +1,6 @@
 class Department {
+
+  static fiscalYear = 2020
   /* TOKNOW: in TS we can handle with two types of properties, private and public, the last one is a default value. 
   E.G: if you're working on a big team, you could use a /private/ class just to clarify at the team that theres only one way to access to certain class property.*/
   // private readonly id: string;
@@ -22,6 +24,10 @@ class Department {
     console.log(this.employees.length)
     console.log(this.employees)
   }
+ // TOKNOW: to access or set a static property we access with the keyword static
+  static createEmployee(name: string) {
+    return {name: name}
+  }
 }
 
 class ITDepartment extends Department {
@@ -32,12 +38,32 @@ class ITDepartment extends Department {
 }
 
 class AccountingDepartment extends Department {
+  private lastReport: string;
+
+  // The 'getters' in TS are used as a keyword 'get' to access
+  get mostRecentReport() {
+    if (this.lastReport) {
+      return this.lastReport;
+    }
+    throw new Error ('No report found.')
+  }
+
+  // The 'setters' in TS are used as a keyword 'set' to access, note that you can use the same function name.
+  set mostRecentReport(value: string) {
+    if (!value) {
+      throw new Error('Please pass in a valid value!')
+    }
+    this.addReports(value)
+  }
+
   constructor(id: string, private reports: string[]) {
     super(id, 'Accounting')
+    this.lastReport = reports[0];
   }
 
   addReports(text: string) {
     this.reports.push(text)
+    this.lastReport = text;
   }
 
   printReports() {
@@ -47,6 +73,16 @@ class AccountingDepartment extends Department {
 
 const accounting = new AccountingDepartment('d2', [ ])
 const it = new ITDepartment('d1', ["Agucho", "Hernan", "Maciel"])
+
+const employee1 = Department.createEmployee('Ani')
+
+console.log(employee1, Department.fiscalYear)
+
+// To use setter & getters if you access as a method I.E: accouting.mostRecentReport() we are going to
+// access as a 'getter' method, but if we access as a property I.E: accounting.mostRecentReport = 'Lorem ipsum'
+// we're going to access as a 'setter' method.
+accounting.mostRecentReport = 'Lorem ipsum dolor sit. '
+console.log(accounting.mostRecentReport)
 
 accounting.addReports('Something went wrong')
 accounting.printReports()
