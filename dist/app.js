@@ -12,9 +12,6 @@ class Department {
         this.employees = [];
         // this.name = n
     }
-    describe() {
-        console.log(`Department (${this.id}): ${this.name}`);
-    }
     addEmployee(employee) {
         this.employees.push(employee);
     }
@@ -32,6 +29,9 @@ class ITDepartment extends Department {
     constructor(id, admins) {
         super(id, 'IT');
         this.admins = admins;
+    }
+    describe() {
+        console.log('IT Department - ID: ' + this.id);
     }
 }
 class AccountingDepartment extends Department {
@@ -54,6 +54,16 @@ class AccountingDepartment extends Department {
         this.reports = reports;
         this.lastReport = reports[0];
     }
+    static getInstance() {
+        if (this.instance) {
+            return this.instance;
+        }
+        this.instance = new AccountingDepartment('d2', []);
+        return this.instance;
+    }
+    describe() {
+        console.log('Accounting Department: ' + this.id);
+    }
     addReports(text) {
         this.reports.push(text);
         this.lastReport = text;
@@ -62,7 +72,8 @@ class AccountingDepartment extends Department {
         console.log(this.reports);
     }
 }
-const accounting = new AccountingDepartment('d2', []);
+// const accounting = new AccountingDepartment('d2', [ ])
+const accounting = AccountingDepartment.getInstance();
 const it = new ITDepartment('d1', ["Agucho", "Hernan", "Maciel"]);
 const employee1 = Department.createEmployee('Ani');
 console.log(employee1, Department.fiscalYear);
