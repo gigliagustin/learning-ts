@@ -1,57 +1,118 @@
-class Department {
-  /* TOKNOW: in TS we can handle with two types of properties, private and public, the last one is a default value. 
-  E.G: if you're working on a big team, you could use a /private/ class just to clarify at the team that theres only one way to access to certain class property.*/
-  // private readonly id: string;
-  // privatename:  string;
-  private employees: string[] = [];
-  // TOKNOW: We dont need to make a doble initialization of our constructor, we can have this like a refactor of our code writing down (in the constructor) the properties that we are going to need.
-  // TOKNOW: Readonly property it's a typescript property, just like private and public. His objective is to add some extra security on our code assugirng that THAT property, cannot be modified. It can only be initialized once, and them, TS won't let you overwrite it anymore. Of course, if we compilate this code, it won't fail, because is TS.
-  constructor(private readonly id: string, public name: string) {
-    // this.name = n
-  }
+// intersection-types
+// TOKNOW: allows to combines another types IE:
 
-  describe(this: Department) {
-    console.log(`Department (${this.id}): ${this.name}`)
+type Admin = {
+  name: string;
+  privileges: string[];
+};
+
+type Employee = {
+  name: string;
+  startDate: Date;
+};
+
+type ElevatedEmployee = Admin & Employee
+
+const e1: ElevatedEmployee = {
+  name: 'Agucho',
+  privileges: ['create-server'],
+  startDate: new Date()
 }
 
-  addEmployee(employee: string) {
-    this.employees.push(employee)
-  }
+type Combinable = string | number;
+type Numeric = number | boolean;
 
-  printEmployeeInformation() {
-    console.log(this.employees.length)
-    console.log(this.employees)
+type Universal = Combinable & Numeric
+
+
+// type-guards
+// TOKNOW: They're more used. They're just a term that describes the idea o the approach of checking if
+// a certain property or method exists before to tries of using it. IE:
+
+function add(a: Combinable, b: Combinable) {
+  //Explain: Because we have out type Combinable, we can receive such as a string or a number
+  // but we can't return a sum for a string. Ts tell us that thats wrong, so if we check the type, we could say that this is a
+  // type-guard
+  if (typeof a === 'string' || typeof b === 'string') {
+    return a.toString() + b.toString()
+  }
+  return a + b;
+}
+
+type UnknownEmployee = Employee | Admin;
+
+function printEmployeeInformation(emp: UnknownEmployee) {
+  console.log('Name: ' + emp.name);
+  if ('privileges' in emp) {
+    console.log('Privileges: ' + emp.privileges);
+  }
+  if ('startDate' in emp) {
+    console.log('Start Date: ' + emp.startDate);
   }
 }
 
-class ITDepartment extends Department {
-  constructor(id: string, public admins: string[]) {
-    super(id, 'IT');
-    
+printEmployeeInformation({name: "Agucho", startDate: new Date()});
+
+class Car {
+  drive() {
+    console.log('Driving...')
   }
 }
 
-class AccountingDepartment extends Department {
-  constructor(id: string, private reports: string[]) {
-    super(id, 'Accounting')
+class Truck {
+  drive() {
+    console.log('Driving a truck...')
   }
 
-  addReports(text: string) {
-    this.reports.push(text)
-  }
-
-  printReports() {
-    console.log(this.reports )
+  loadCargo(amount: number){
+    console.log('Loading cargo...' + amount)
   }
 }
 
-const accounting = new AccountingDepartment('d2', [ ])
-const it = new ITDepartment('d1', ["Agucho", "Hernan", "Maciel"])
+type Vehicle = Car | Truck
 
-accounting.addReports('Something went wrong')
-accounting.printReports()
+const v1 = new Car();
+const v2 = new Truck();
 
+function useVehicle(vehicle: Vehicle) {
+  vehicle.drive();
+  if (vehicle instanceof Truck) {
+    vehicle.loadCargo(1000);
+  }
+}
 
-/* const accountingCopy = {name: 'DUMMY', describe: accounting.describe }
+useVehicle(v1)
+useVehicle(v2)
 
-accountingCopy.describe() */
+// Discriminated unions
+// TOKNOW: its a pattern that you could use with union-types which makes easier the implementation of
+// guard-types. It's only available when you work with object types!!
+
+interface Bird {
+  type: 'bird';
+  flyingSpeed: number;
+}
+
+interface Horse {
+  type: 'horse';
+  runningSpeed: number;
+}
+
+type Animal = Bird | Horse;
+
+function moveAnimal(animal: Animal) {
+  /* if ('fliyingSpeed' in animal) {
+    console.log('Moving with speed: ' + animal.fliyingSpeed)
+  } */
+  let speed;
+  switch (animal.type) {
+    case 'bird':
+      speed = animal.flyingSpeed;
+      break;
+      case 'horse':
+        speed = animal.runningSpeed
+  }
+  console.log('Moving with speed: ' + speed)
+}
+
+moveAnimal({type: 'bird', flyingSpeed: 10})
