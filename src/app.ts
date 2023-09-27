@@ -1,4 +1,4 @@
-// intersection types
+// intersection-types
 // TOKNOW: allows to combines another types IE:
 
 type Admin = {
